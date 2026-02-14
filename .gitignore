@@ -1,0 +1,6 @@
+.Rhistory
+.RData
+.DS_Store
+*_files/
+*.html
+.quarto/

@@ -1,0 +1,568 @@
+---
+title: "End-to-End Data Collection & Analysis: The X Factor UK"
+subtitle: "Web Scraping, Data Validation, and Exploratory Analysis"
+author: "Yusuf Kurnia Romadhon"
+date: "2025"
+keywords: [R, Web Scraping, Data Cleaning, Exploratory Analysis, Reproducible Research]
+format:   
+  html:
+    theme: default
+    code-fold: true
+    code-summary: "Show implementation details"
+execute: 
+  warning: false
+  message: false
+---
+
+::: panel-tabset
+<!-- Task 1 Tab: Data and Documenting -->
+
+## Data and Documenting
+
+### Business Question: What Drives Winning Outcomes in The X Factor UK?
+
+The primary objective of this analysis is to identify which contestant category achieved the highest success rate across all seasons of The X Factor UK, and to assess whether contestant age or judge mentorship materially influenced winning outcomes within that category.
+
+To support this analysis, the following sub-questions were explored:
+
+1. Which contestants won each season, including their age at the time of winning, competition category, and mentoring judge?
+2. How frequently did each judge mentor a winning contestant within a specific category?
+3. How often did each contestant category win across all seasons?
+4. What is the age distribution of winners over time?
+5. How did television ratings vary across seasons?
+
+**Clarifications and Analytical Definitions**
+
+To ensure consistency and interpretability, the following definitions are applied throughout the analysis:
+
+1. Success rate is defined as the proportion of total series wins attributed to a specific contestant category across all seasons.
+2. Contestant age is grouped into three categories: under 18, 18–24, and 25 years or older.
+3. Impact refers to whether observable and consistent patterns suggest that contestant age or judge mentorship is associated with higher winning likelihood within a category, rather than formal statistical significance testing.
+
+### Data Overview and Structure
+
+#### Data Description
+
+Depending on the analytical question, data is sourced from Wikipedia pages covering The X Factor UK Series 1 to 15. The series overview page provides structured tabular information on season-level television ratings, while individual season pages contain detailed tables in the Acts section, including winning contestants, judges, contestant ages, and competition categories.
+
+The data represents census-level information from the regular broadcast series of The X Factor UK (Series 1–15). All data is publicly available and licensed under the Creative Commons Attribution–ShareAlike 4.0 license.
+
+The ratings table is primarily used to address sub-question 5 (viewer ratings over time), while the acts table supports the main business question and remaining sub-questions related to contestant characteristics and outcomes.  
+
+### Data Dictionary and Variable Definitions
+
+#### Data Dictionary
+
+Here is the detailed information about the variables used in each table:
+
+1. Table: Acts
+
+    - act: name of the contestant. (character)
+    - result: contestant’s final placement in each season. (character)
+    - age: contestant’s age at the time of participation. (numeric)
+    - series: season number in which the contestant appeared. (numeric)
+    - judges: judge mentoring the contestant. (character)
+    - categories: competition category of the contestant. (character)
+    
+2. Table: Ratings
+
+    - series: season number. (numeric)
+    - episodes: number of episodes in the season. (numeric)
+    - first_ep: first air date of the season. (date)
+    - last_ep: final air date of the season. (date)
+    - avg_uk_viewers: average UK television viewership for the season. (numeric)
+
+#### README
+
+Author: Yusuf Kurnia Romadhon
+
+Release Date: 18 June 2025
+
+This project uses census-level data from the regular broadcast series of The X Factor UK (Series 1–15). Two datasets are used: Acts and Ratings. 
+
+The Acts dataset contains contestant-level information, including the winning act, competition result, age, season, judge mentor, and category. The Ratings dataset provides season-level metrics, including episode counts, air dates, and average UK viewership. The combined use of these datasets enables analysis of the following business question: “which category had the highest success rate for winning across all seasons of The X Factor UK, and whether the age of the contestants or the specific judge significantly impacted the victories in that category?” and to address the sub-questions:
+
+1. Which contestants won each season, including their age at the time of winning, competition category, and mentoring judge?
+2. How frequently did each judge mentor a winning contestant within a specific category?
+3. How often did each contestant category win across all seasons?
+4. What is the age distribution of winners over time?
+5. How did television ratings vary across seasons?
+
+Data Limitation: This analysis relies exclusively on publicly available Wikipedia data. Episode-level rating information is not available for all seasons. Therefore, viewer analysis is limited to season-level average ratings.
+
+Licenses: Creative Commons Attribution-ShareAlike License 4.0
+
+### Data Collection Methodology
+
+This section describes the methodology used to collect The X Factor UK data from Wikipedia.
+
+1. **Source Review and Structure Validation**. Each season page was reviewed to understand the structure and consistency of the available tables. During this review, a structural variation was identified in Series 12, where the table naming differed from other seasons. The data collection logic was designed to account for this inconsistency.
+
+2. Library Setup. Required R libraries were loaded to support web scraping, data manipulation, cleaning, and reproducible reporting.
+
+```{r load-library}
+# Load required libraries
+library(rvest) # Web scraping
+library(tidyverse) # Data manipulation, string manipulation, and reading and writing data
+library(purrr) # Functional programming
+library(janitor) # Cleaning data
+library(polite) # Scraping websites responsibly
+library(knitr) # Table design
+```
+
+3. **Data Source Access**. Wikipedia URLs containing the acts and ratings tables were accessed to retrieve season-level and contestant-level data for analysis.
+
+```{r load-url}
+# Define season URL for The X Factor UK series overview (ratings)
+season_url <- read_html("https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)")
+
+# Define season URLs for The X Factor UK series 1 to 15 (acts)
+season_urls <- paste0("https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_", 1:15)
+```
+
+4. **Data Extraction**. Data was scraped using responsible web-scraping practices, including the use of a polite session and custom user agent to minimise server impact and support ethical data access.
+    
+```{r polite-session}
+# Define a polite session for ethical scraping
+session <- bow("https://en.wikipedia.org", user_agent = "Yusuf Kurnia Romadhon")
+
+```
+    
+5. **Acts Table Definition and Cleaning**. Contestant-level data (acts) was extracted from season-specific tables.
+Following extraction, data cleaning steps were applied to address inconsistencies, including: converting age values recorded as text into numeric format, standardising judge mentor names, and aligning column names across seasons. These steps ensured the dataset was suitable for comparative analysis.
+    
+```{r acts-table}
+# Acts Table
+# Scrape acts table from acts section in each season
+scrape_acts_table <- function(url) {
+  series_num <- str_extract(url, "series_\\d+") |> 
+    str_remove("series_") |> as.integer()
+
+  page <- tryCatch(read_html(url), error = function(e) return(NULL))
+  if (is.null(page)) return(tibble())
+
+  tables <- page |> html_elements("table.wikitable")
+  candidate_tables <- tables |>
+    map(~ tryCatch(html_table(.x, fill = TRUE), error = function(e) NULL)) |>
+    compact()
+
+  # Detect table with expected columns
+  acts_table <- candidate_tables |>
+    keep(~ all(c("Age(s)", "Hometown", "Category (mentor)", "Result") %in% names(.x)) &&
+           any(c("Act", "Contestant") %in% names(.x))) |>
+    first()
+
+  if (is.null(acts_table)) return(tibble())
+
+  # Rename Contestant to Act if needed
+  if ("Contestant" %in% names(acts_table)) {
+    names(acts_table)[names(acts_table) == "Contestant"] <- "Act"
+  }
+
+  # Clean column names first so we can use age_s
+  acts_table <- acts_table |> clean_names()
+
+  # Compute derived fields and normalisation
+  acts_table <- acts_table |>
+    mutate(
+      #redefine age
+      age = case_when(
+        str_detect(age_s, "–|&|-") ~ map_dbl(str_extract_all(age_s, "\\d+"), ~ mean(as.numeric(.x))),
+        str_detect(age_s, "\\d+") ~ as.numeric(str_extract(age_s, "\\d+")),
+        TRUE ~ NA_real_
+      ),
+      age = round(age),
+      #redefine series
+      series = series_num,
+      #redefine judges
+      judges = str_extract(category_mentor, "(?<=\\().+?(?=\\))"),
+      categories = str_trim(str_remove(category_mentor, "\\s*\\(.*\\)")),
+      judges = case_when(
+        judges == "Cowell" ~ "Simon Cowell",
+        judges == "Osbourne" ~ "Sharon Osbourne",
+        judges == "Walsh" ~ "Louis Walsh",
+        judges == "Minogue" ~ "Dannii Minogue",
+        judges == "Cole" ~ "Cheryl",
+        judges == "Gary Barlow" ~ "Gary Barlow",
+        judges == "Tulisa" ~ "Tulisa Young",
+        judges == "Kelly Rowland" ~ "Kelly Rowland",
+        judges == "Fernandez-Versini" ~ "Cheryl",
+        judges == "Mel B" ~ "Mel B",
+        judges == "Scherzinger" ~ "Nicole Scherzinger",
+        judges == "Field" ~ "Ayda Field",
+        judges == "Tomlinson" ~ "Louis Tomlinson",
+        judges == "Williams" ~ "Robbie Williams",
+        judges == "Barlow" ~ "Gary Barlow",
+        judges == "Ora" ~ "Rita Ora",
+        TRUE ~ judges
+      ),
+      categories = case_when(
+        categories %in% c("Over 25s", "Over 26s", "Over 28s", "Over 29s") ~ "Overs",
+        categories %in% c("16-24s", "16–24s") ~ "Young Adults",
+        TRUE ~ categories
+      )
+    ) |>
+    select(act, result, age, series, judges, categories)
+
+  return(acts_table)
+}
+
+# Apply scraping for Acts Table
+acts_all <- map_df(season_urls, scrape_acts_table)
+
+# Write csv for checking
+write_csv(acts_all, "data/xfactor_acts.csv")
+
+```
+
+6. **Ratings Table Definition and Cleaning**. Series-level ratings data was extracted using the same scraping approach.
+After extraction, the dataset was cleaned to retain only analytically relevant variables, including episode counts, air dates, and average UK viewership.
+    
+```{r ratings-table}
+# Ratings Table
+# Scrape series overview ratings
+scrape_series_ratings <- function() {
+  # Find all tables on the page
+  tables <- season_url |> html_elements("table")
+
+  # Filter to the table that contains "Average UK viewers"
+  ratings_table <- tables |>
+    map(~ tryCatch(html_table(.x, fill = TRUE), error = function(e) NULL)) |>
+    compact() |>
+    keep(~ any(str_detect(names(.x), "Average UK viewers"))) |>
+    first()
+
+  if (is.null(ratings_table)) return(tibble())
+
+  # Rename all columns
+  if (ncol(ratings_table) >= 8) {
+    colnames(ratings_table)[1:8] <- c(
+      "series", "episodes", "first_ep", "last_ep",
+      "winner", "runner_up", "avg_uk_viewers", "winning_mentor"
+    )
+  }
+
+  # Select and clean the relevant columns
+  ratings_table <- ratings_table |>
+    select(series, episodes, first_ep, last_ep, avg_uk_viewers) |>
+    mutate(
+      series = as.integer(series),
+      episodes = as.integer(episodes),
+      avg_uk_viewers = as.numeric(str_replace(avg_uk_viewers, ",", ""))
+    ) |>
+    filter(!is.na(series))
+
+  return(ratings_table)
+}
+
+# Apply scraping
+ratings_all <- scrape_series_ratings()
+
+# Write CSV
+write_csv(ratings_all, "data/xfactor_ratings.csv")
+
+```
+
+7. **Data Storage and Analysis Readiness**. After data collection and cleaning, both datasets were stored locally to enable validation, reproducibility, and efficient analysis. Given the manageable size of the data, the final analysis uses directly sourced Wikipedia data to maintain transparency and traceability.  
+
+### References for the Data Sources
+
+Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 1. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_1
+
+Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 2. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_2
+
+Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 3. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_3
+
+Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 4. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_4
+
+Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 5. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_5
+
+Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 6. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_6
+
+Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 7. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_7
+
+Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 8. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_8
+
+Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 9. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_9
+
+Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 10. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_10
+
+Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 11. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_11
+
+Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 12. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_12
+
+Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 13. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_13
+
+Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 14. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_14
+
+Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 15. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_15 
+
+<!-- Task 2 Tab: Writing your blogpost -->
+
+## Blog post
+
+### Motivation
+
+Watching The X Factor UK was a regular family activity during my early teenage years, making the programme a familiar and culturally significant part of my viewing experience. As a long-running reality singing competition created by Simon Cowell, the show featured a structured format in which judges mentored specific contestant categories across each season.
+
+Although The X Factor UK was cancelled by ITV in 2021 (Wilson, 2021), public statements by Simon Cowell in 2024 indicated interest in reviving the franchise (Sweetnam, 2024). The programme originally aired for 15 seasons between 2004 and 2018, generating a substantial historical record of contestants, judges, categories, and audience ratings.
+
+This project is motivated by an interest in examining these historical patterns through data. Using publicly available data from Wikipedia, the analysis explores factors associated with winning outcomes across all seasons, with particular focus on contestant categories, age groups, and judge mentorship. The goal is to move beyond anecdotal perceptions of success and provide a data-driven perspective on what has historically influenced winning outcomes in The X Factor UK.
+
+### Analysis
+
+#### Sub-question 1: Winners by Season, Age, Category, and Judge
+Which contestants won each season, including their age at the time of winning, competition category, and mentoring judge?
+
+This section examines the winning contestant from each season of The X Factor UK, including their age at the time of winning, competition category, and mentoring judge. The summary provides a complete season-by-season overview of winning outcomes across all 15 series.
+
+```{r sub-question-1, echo=FALSE}
+#select variables
+question_1 <- acts_all |>
+  filter(result == "Winner") |>
+  select(series, act, age, judges, categories)
+  
+knitr::kable(question_1, caption = "Table 1: Winner Acts by Series, Age, Judge, and Category")
+
+```
+
+Table 1 highlights a structural difference in category naming during the early seasons of the programme. In Series 2 and 3, the category labelled Young Adults was used instead of separate Boys and Girls categories. Further review of the programme format indicates that these early seasons featured only three judges, resulting in male and female contestants under the age of 24 being grouped into a single category. From later seasons onward, the category structure was standardised, allowing for clearer separation between age and gender-based categories.
+
+#### Sub-question 2: Winning Outcomes by Judge and Category
+How frequently did each judge mentor a winning contestant within a specific category?
+
+To address this question, the acts_all dataset was filtered to include only winning contestants identified in Sub-question 1. A stacked bar chart was then constructed by grouping wins by mentoring judge and competition category. Judges were ordered from highest to lowest total number of wins to facilitate comparison across mentoring outcomes.
+
+```{r sub-question-2, fig.cap="Figure 1: Number of Winners by Judge", echo=FALSE}
+# Create a stacked bar chart of winner count by judge
+# Prepare Data
+question_2 <- question_1 |>
+  count(judges, categories) |>
+  group_by(judges) |>
+  mutate(total = sum(n)) |>
+  ungroup() |>
+  arrange(desc(total)) |>
+  mutate(judges = factor(judges, levels = unique(judges[order(-total)])))
+
+# Create stacked bar chart
+ggplot(question_2, aes(x = judges, y = n, fill = categories)) +
+  geom_bar(stat = "identity") +
+  geom_text(
+    data = question_2 |> distinct(judges, total),
+    aes(x = judges, y = total, label = total),
+    vjust = -0.5,
+    size = 3.5,
+    inherit.aes = FALSE
+  ) +
+  expand_limits(y = max(question_2$total) * 1.1) +
+  labs(
+    title = "Number of Winners by Judge",
+    x = "Judge",
+    y = "Winner Count",
+    fill = "Category"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.title = element_text(face = "bold", hjust = 0.5)
+  )
+
+```
+
+Figure 1 indicates that Simon Cowell was the most successful judge in terms of total winning outcomes, with four winners across three categories: Overs, Young Adults, and Groups. Cheryl, Dannii Minogue, and Nicole Scherzinger each mentored two winning acts during their respective tenures. In contrast, Louis Tomlinson, Louis Walsh, Rita Ora, Sharon Osbourne, and Tulisa Young each mentored one winning act. These results suggest that sustained success across multiple categories was concentrated among a small number of judges, rather than being evenly distributed across the judging panel.
+
+#### Sub-question 3: Winning Distribution by Category
+How often did each contestant category win across all seasons?
+
+To summarise the distribution of winning outcomes across categories, the relative proportion of total wins by category was calculated and visualised to highlight differences in overall success rates.
+
+```{r main-question, fig.cap="Figure 2: Winning Percentage by Category", echo=FALSE}
+# Summarise counts and calculate percentage
+category_percentage <- question_1 |>
+  count(categories) |>
+  mutate(
+    percentage = round(n / sum(n) * 100, 1),
+    label = paste0(categories, "\n", percentage, "%")
+  )
+
+# Create pie chart
+ggplot(category_percentage, aes(x = "", y = percentage, fill = categories)) +
+  geom_bar(width = 1, stat = "identity", color = "white") +
+  coord_polar("y", start = 0) +
+  geom_text(aes(label = label), position = position_stack(vjust = 0.5), size = 4.5) +
+  labs(
+    title = "Winning Percentage by Category",
+    fill = "Category"
+  ) +
+  theme_void() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    legend.title = element_text(face = "bold")
+  )
+```
+
+Figure 2 shows that the Boys category recorded the highest proportion of wins, accounting for 40% of all series victories. The Overs category ranked second with 20% of total wins. In contrast, the Girls, Groups, and Young Adults categories each accounted for 13.3% of winning outcomes across all seasons. This concentration of wins suggests a structural advantage for male solo contestants within the competition format over time.
+
+#### Sub-question 4: Age Profile of Winning Contestants
+What is the age distribution of winners over time?
+
+To examine the age profile of winning contestants, winner ages were grouped into three bands: under 18, under 25, and 25 or older. Aggregate counts were then calculated and visualised using a stacked bar chart to highlight differences across age groups and categories.
+
+```{r sub-question-4, fig.cap="Figure 3: Winner Count by Age Group", echo=FALSE}
+# Create age groups and summarise counts
+question_4 <- question_1 |>
+  mutate(age_group = case_when(
+    age < 18 ~ "<18",
+    age < 25 ~ "<25",
+    TRUE ~ "≥25"
+  )) |>
+  count(age_group, categories) |>
+  mutate(age_group = factor(age_group, levels = c("<18", "<25", "≥25")))
+
+# Compute totals per age group for top labels
+age_totals <- question_4 |>
+  group_by(age_group) |>
+  summarise(total = sum(n), .groups = "drop")
+
+# Create the stacked bar chart
+ggplot(question_4, aes(x = age_group, y = n, fill = categories)) +
+  geom_bar(stat = "identity") +
+  geom_text(data = age_totals, aes(x = age_group, y = total, label = total),
+            inherit.aes = FALSE,
+            vjust = -0.5) +
+  labs(
+    title = "Winner Count by Age Group",
+    x = "Age Group",
+    y = "Winner Count",
+    fill = "Category"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  )
+
+```
+
+Figure 3 indicates that contestants under 25 accounted for the majority of winning outcomes, with nine wins across all seasons. This indicates that younger contestants, particularly those in their late teens to early 20s, were the most successful on The X Factor UK. In contrast, contestants under 18 achieved only a single win, indicating limited success for the youngest age group. Furthermore, the 25-and-over group produced five winners, demonstrating that older contestants remained competitive, albeit with lower overall success compared to the under-25 group. Overall, the results suggest a competitive advantage for contestants in the under-25 age range, aligning with the show’s historical emphasis on emerging young talent.
+
+#### Sub-question 5: Viewership Trends Across Series
+How did television ratings vary across seasons?
+
+This sub-question is examined using the ratings_all dataset, which contains season-level average UK viewership figures. Figure 4 presents a line chart of average UK viewership across all 15 series.
+
+```{r sub-question-5, fig.cap="Figure 4: Average UK Viewers per Series", echo=FALSE}
+ratings_all <- ratings_all |>
+  arrange(series)
+
+# Line chart with point labels
+ggplot(ratings_all, aes(x = series, y = avg_uk_viewers)) +
+  geom_line(color = "steelblue", size = 1) +
+  geom_point(color = "darkred", size = 2) +
+  geom_text(
+    aes(label = round(avg_uk_viewers, 1)),
+    vjust = -0.8,
+    size = 3
+  ) +
+  labs(
+    title = "Average UK Viewers per Series",
+    x = "Series",
+    y = "Average UK Viewers (millions)"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+```
+
+Figure 4 shows that The X Factor UK reached its highest viewership during season 7, peaking at an average of 14.1 million viewers. This suggests that Series 7 represented the peak of the programme’s popularity during its broadcast run. Following this peak, average viewership declined steadily across subsequent seasons, reaching 5.8 million viewers by the final series. This sustained downward trend indicates a gradual loss of audience engagement in later years, despite continued format consistency.
+
+#### Main Insight: What Drives Winning Outcomes in The X Factor UK?
+Across all 15 seasons of The X Factor UK, the Boys category recorded the highest success rate, accounting for 40% of all winning acts. As shown in Figure 2, this makes the Boys category the most consistently successful category in the show’s history.
+
+Contestant age also played a significant role in winning outcomes. As illustrated in Figure 3, contestants aged under 25 accounted for 9 of the 15 total winners, indicating a strong preference or sustained trend toward younger talent across seasons.
+
+Judge mentorship further influenced success, though its impact varied by category. While Figure 1 shows that Simon Cowell mentored the highest number of winners overall (four wins), none of these victories came from the Boys category. Instead, judges such as Dannii Minogue and Nicole Scherzinger were instrumental in mentoring winners within the Boys category.
+
+Overall, these findings suggest that category and contestant age were the primary drivers of winning success, while judge influence was more category-specific rather than universally dominant.
+
+
+### Conclusion
+
+Consistent with the main insight, the Boys category emerged as the most successful group across all seasons of The X Factor UK, accounting for six wins out of fifteen seasons (40%).
+
+Contestant age also played a decisive role in winning outcomes. Performers aged under 25 accounted for 60% of all winners (9 out of 15), indicating a clear and consistent preference for younger talent among audiences throughout the series.
+
+Judge influence further shaped winning patterns, though its impact varied by category. While Simon Cowell was the most successful judge overall, mentoring four winning acts, none of these victories came from the Boys category. Instead, judges such as Dannii Minogue and Nicole Scherzinger were particularly effective in mentoring winners within this category. This suggests that while some judges achieved broad success, others demonstrated strong category-specific specialisation.
+
+Finally, audience engagement followed a clear lifecycle trend. The X Factor UK reached its peak average viewership in Season 7, with 14.1 million viewers, before experiencing a steady decline in subsequent seasons, ending at 5.8 million viewers in the final season. This pattern highlights both the cultural peak of the program and the gradual erosion of audience interest over time.
+
+In summary, winning outcomes on The X Factor UK were driven primarily by contestant category and age, with judge influence acting as a secondary, category-dependent factor amid declining audience engagement over time.
+
+### References
+
+Firke, S. (2023). janitor: Simple tools for examining and cleaning dirty data (R package version 2.2.0). https://CRAN.R-project.org/package=janitor
+
+Henry, L. (2023). purrr: Functional programming tools (R package version 1.0.2). https://CRAN.R-project.org/package=purrr
+
+Muenchen, R. A., & Rudis, B. (2021). polite: Be nice on the web (R package version 0.1.1). https://CRAN.R-project.org/package=polite
+
+Sweetnam, J. (2024). Simon Cowell addresses X Factor return rumours as fans beg for show comeback. Daily Star. https://www.dailystar.co.uk/tv/simon-cowell-addresses-x-factor-32327778
+
+Wickham, H. (2023). rvest: Easily harvest (scrape) web pages (R package version 1.0.4). https://CRAN.R-project.org/package=rvest
+
+Wickham, H., et al. (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686. https://doi.org/10.21105/joss.01686
+
+Wickham, H., François, R., Henry, L., & Müller, K. (2023). dplyr: A Grammar of Data Manipulation. R package version 1.1.1.
+
+Wikipedia contributors. (n.d.). The X Factor (British TV series). Wikipedia. Retrieved June 20, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)
+
+Wilson, J. (2021). The X Factor cancelled after 17 years. Forbes. https://www.forbes.com/sites/joshwilson/2021/07/29/the-x-factor-cancelled-after-17-years/
+
+Xie, Y. (2023). knitr: A General-Purpose Package for Dynamic Report Generation in R. R package version 1.42.
+
+### AI acknowledgment
+
+This is the link of ChatGPT that I used: [AI Acknowledgement](https://chatgpt.com/share/685557e9-98a8-8010-9e8d-57e6b9db20f9)
+
+<!-- Task 3 Tab: Behind the Scenes -  -->
+
+## Behind the Scenes
+
+### Data Preparation and Technical Challenges
+
+This project involved a substantial amount of data cleaning and standardisation that would not typically be visible in a public-facing blog post. The primary challenge stemmed from inconsistencies in the way data was presented across Wikipedia pages for different seasons of The X Factor UK.
+
+Judge and category names were not consistently recorded across seasons. For example, some judge names appeared in abbreviated or alternative forms (e.g., “Cowell”, “Cole”), requiring manual mapping to standardised full names (e.g., “Simon Cowell”, “Cheryl”) to ensure analytical consistency. Similarly, category labels varied between early and later seasons, necessitating additional harmonisation before aggregation.
+
+The age variable also required careful handling. In several cases, ages were recorded as ranges (e.g., “17–24”) or as multiple values for group acts. These entries could not be directly analysed and required string parsing, conditional logic, and numeric conversion, including the use of averaging where appropriate, to produce a consistent numeric representation.
+
+Web scraping itself was time-intensive due to structural inconsistencies in Wikipedia tables across seasons. Some tables contained missing columns, alternative header names, or differing layouts, which introduced errors during automated extraction. These issues were addressed through defensive programming techniques, including conditional checks and tryCatch() logic, to ensure the scraping process could adapt to structural variation without failing.
+
+Overall, the most time-consuming and least “visible” aspect of this project was the standardisation of inconsistent table formats and naming conventions. While these tasks were not analytically exciting, they were essential for ensuring data quality, comparability across seasons, and the validity of downstream analysis.
+
+### Technical Challenges and Problem Solving
+
+A key challenge in this analysis was the variation in table structures across Wikipedia pages for different seasons of The X Factor UK. While most seasons followed a broadly consistent format, some exceptions required additional handling. For example, Season 12 used a different column header (“Contestant” instead of “Act”), necessitating conditional renaming logic to ensure consistency across datasets.
+
+In several cases, tables did not contain the expected columns, which caused errors during automated scraping and resulted in incomplete or incorrect outputs. To address this, defensive programming techniques were implemented, including validation checks and fallback logic to identify, skip, or adapt to malformed tables. This required careful code review and iterative testing to stabilise the scraping process.
+
+As part of this project, I also strengthened my web scraping skills, particularly through the use of rvest and purrr to systematically collect data across multiple URLs. While web scraping was not a technique I had previously used extensively, this project required designing a robust workflow capable of automatically extracting, cleaning, and integrating data from heterogeneous web sources.
+
+Despite structural inconsistencies across pages, the original analytical scope was retained. The final outcome was a reliable and reproducible data pipeline that could consistently extract, standardise, and join data across all seasons.
+
+### Limitations and Future Extensions
+
+One limitation of this analysis is its exclusive focus on winning contestants. While winners provide a clear outcome measure, excluding runners-up and finalists may overlook additional performance patterns and competitive dynamics that influence success. Incorporating broader placement data could provide a more comprehensive view of category and judge effects.
+
+Contestant age was grouped into three broad categories to support high-level comparison. While effective for identifying overall trends, future analysis could examine continuous age measures or median ages within categories to provide more granular insights.
+
+The ratings analysis was constrained by data availability, as episode-level ratings were not consistently available across seasons. As a result, the analysis relies on season-level average viewership, which limits the ability to assess short-term audience responses to specific contestants, judges, or live-show events.
+
+The analysis also implicitly assumes that judge–category combinations had comparable opportunities to produce winners across seasons. In practice, changes to the show’s format, judging panel composition, and voting mechanisms over time may have influenced competitive balance.
+
+Future extensions could incorporate public engagement indicators such as social media activity, voting data, or contestant progression through live shows to better capture audience influence. From a technical perspective, the scraping workflow could be further improved by persisting cleaned datasets locally to reduce reliance on live website structures and improve long-term reproducibility.
+
+Overall, while these limitations constrain the scope of inference, the data and methods used are appropriate for the questions addressed in this project and provide a solid foundation for further analytical expansion.
+
