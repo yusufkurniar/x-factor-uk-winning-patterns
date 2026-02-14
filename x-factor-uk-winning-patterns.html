@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Yusuf Kurnia Romadhon">
+<meta name="dcterms.date" content="2025-01-01">
+<meta name="keywords" content="R, Web Scraping, Data Cleaning, Exploratory Analysis, Reproducible Research">
+
+<title>End-to-End Data Collection &amp; Analysis: The X Factor UK – X Factor UK Winning Patterns</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-1d4f84655f446305ac42a8f1abcf7405.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
+    </div>
+<!-- main -->
+<main class="content column-page" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">End-to-End Data Collection &amp; Analysis: The X Factor UK</h1>
+<p class="subtitle lead">Web Scraping, Data Validation, and Exploratory Analysis</p>
+</div>
+
+
+
+<div class="quarto-title-meta column-page">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Yusuf Kurnia Romadhon </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 1, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+<div>
+  <div class="keywords">
+    <div class="block-title">Keywords</div>
+    <p>R, Web Scraping, Data Cleaning, Exploratory Analysis, Reproducible Research</p>
+  </div>
+</div>
+
+</header>
+
+
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Data and Documenting</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Blog post</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Behind the Scenes</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<section id="business-question-what-drives-winning-outcomes-in-the-x-factor-uk" class="level3">
+<h3 class="anchored" data-anchor-id="business-question-what-drives-winning-outcomes-in-the-x-factor-uk">Business Question: What Drives Winning Outcomes in The X Factor UK?</h3>
+<p>The primary objective of this analysis is to identify which contestant category achieved the highest success rate across all seasons of The X Factor UK, and to assess whether contestant age or judge mentorship materially influenced winning outcomes within that category.</p>
+<p>To support this analysis, the following sub-questions were explored:</p>
+<ol type="1">
+<li>Which contestants won each season, including their age at the time of winning, competition category, and mentoring judge?</li>
+<li>How frequently did each judge mentor a winning contestant within a specific category?</li>
+<li>How often did each contestant category win across all seasons?</li>
+<li>What is the age distribution of winners over time?</li>
+<li>How did television ratings vary across seasons?</li>
+</ol>
+<p><strong>Clarifications and Analytical Definitions</strong></p>
+<p>To ensure consistency and interpretability, the following definitions are applied throughout the analysis:</p>
+<ol type="1">
+<li>Success rate is defined as the proportion of total series wins attributed to a specific contestant category across all seasons.</li>
+<li>Contestant age is grouped into three categories: under 18, 18–24, and 25 years or older.</li>
+<li>Impact refers to whether observable and consistent patterns suggest that contestant age or judge mentorship is associated with higher winning likelihood within a category, rather than formal statistical significance testing.</li>
+</ol>
+</section>
+<section id="data-overview-and-structure" class="level3">
+<h3 class="anchored" data-anchor-id="data-overview-and-structure">Data Overview and Structure</h3>
+<section id="data-description" class="level4">
+<h4 class="anchored" data-anchor-id="data-description">Data Description</h4>
+<p>Depending on the analytical question, data is sourced from Wikipedia pages covering The X Factor UK Series 1 to 15. The series overview page provides structured tabular information on season-level television ratings, while individual season pages contain detailed tables in the Acts section, including winning contestants, judges, contestant ages, and competition categories.</p>
+<p>The data represents census-level information from the regular broadcast series of The X Factor UK (Series 1–15). All data is publicly available and licensed under the Creative Commons Attribution–ShareAlike 4.0 license.</p>
+<p>The ratings table is primarily used to address sub-question 5 (viewer ratings over time), while the acts table supports the main business question and remaining sub-questions related to contestant characteristics and outcomes.</p>
+</section>
+</section>
+<section id="data-dictionary-and-variable-definitions" class="level3">
+<h3 class="anchored" data-anchor-id="data-dictionary-and-variable-definitions">Data Dictionary and Variable Definitions</h3>
+<section id="data-dictionary" class="level4">
+<h4 class="anchored" data-anchor-id="data-dictionary">Data Dictionary</h4>
+<p>Here is the detailed information about the variables used in each table:</p>
+<ol type="1">
+<li><p>Table: Acts</p>
+<ul>
+<li>act: name of the contestant. (character)</li>
+<li>result: contestant’s final placement in each season. (character)</li>
+<li>age: contestant’s age at the time of participation. (numeric)</li>
+<li>series: season number in which the contestant appeared. (numeric)</li>
+<li>judges: judge mentoring the contestant. (character)</li>
+<li>categories: competition category of the contestant. (character)</li>
+</ul></li>
+<li><p>Table: Ratings</p>
+<ul>
+<li>series: season number. (numeric)</li>
+<li>episodes: number of episodes in the season. (numeric)</li>
+<li>first_ep: first air date of the season. (date)</li>
+<li>last_ep: final air date of the season. (date)</li>
+<li>avg_uk_viewers: average UK television viewership for the season. (numeric)</li>
+</ul></li>
+</ol>
+</section>
+<section id="readme" class="level4">
+<h4 class="anchored" data-anchor-id="readme">README</h4>
+<p>Author: Yusuf Kurnia Romadhon</p>
+<p>Release Date: 18 June 2025</p>
+<p>This project uses census-level data from the regular broadcast series of The X Factor UK (Series 1–15). Two datasets are used: Acts and Ratings.</p>
+<p>The Acts dataset contains contestant-level information, including the winning act, competition result, age, season, judge mentor, and category. The Ratings dataset provides season-level metrics, including episode counts, air dates, and average UK viewership. The combined use of these datasets enables analysis of the following business question: “which category had the highest success rate for winning across all seasons of The X Factor UK, and whether the age of the contestants or the specific judge significantly impacted the victories in that category?” and to address the sub-questions:</p>
+<ol type="1">
+<li>Which contestants won each season, including their age at the time of winning, competition category, and mentoring judge?</li>
+<li>How frequently did each judge mentor a winning contestant within a specific category?</li>
+<li>How often did each contestant category win across all seasons?</li>
+<li>What is the age distribution of winners over time?</li>
+<li>How did television ratings vary across seasons?</li>
+</ol>
+<p>Data Limitation: This analysis relies exclusively on publicly available Wikipedia data. Episode-level rating information is not available for all seasons. Therefore, viewer analysis is limited to season-level average ratings.</p>
+<p>Licenses: Creative Commons Attribution-ShareAlike License 4.0</p>
+</section>
+</section>
+<section id="data-collection-methodology" class="level3">
+<h3 class="anchored" data-anchor-id="data-collection-methodology">Data Collection Methodology</h3>
+<p>This section describes the methodology used to collect The X Factor UK data from Wikipedia.</p>
+<ol type="1">
+<li><p><strong>Source Review and Structure Validation</strong>. Each season page was reviewed to understand the structure and consistency of the available tables. During this review, a structural variation was identified in Series 12, where the table naming differed from other seasons. The data collection logic was designed to account for this inconsistency.</p></li>
+<li><p>Library Setup. Required R libraries were loaded to support web scraping, data manipulation, cleaning, and reproducible reporting.</p></li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Show implementation details</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load required libraries</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest) <span class="co"># Web scraping</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># Data manipulation, string manipulation, and reading and writing data</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr) <span class="co"># Functional programming</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor) <span class="co"># Cleaning data</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(polite) <span class="co"># Scraping websites responsibly</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr) <span class="co"># Table design</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="3" type="1">
+<li><strong>Data Source Access</strong>. Wikipedia URLs containing the acts and ratings tables were accessed to retrieve season-level and contestant-level data for analysis.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Show implementation details</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define season URL for The X Factor UK series overview (ratings)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>season_url <span class="ot">&lt;-</span> <span class="fu">read_html</span>(<span class="st">"https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define season URLs for The X Factor UK series 1 to 15 (acts)</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>season_urls <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="4" type="1">
+<li><strong>Data Extraction</strong>. Data was scraped using responsible web-scraping practices, including the use of a polite session and custom user agent to minimise server impact and support ethical data access.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Show implementation details</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a polite session for ethical scraping</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>session <span class="ot">&lt;-</span> <span class="fu">bow</span>(<span class="st">"https://en.wikipedia.org"</span>, <span class="at">user_agent =</span> <span class="st">"Yusuf Kurnia Romadhon"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="5" type="1">
+<li><strong>Acts Table Definition and Cleaning</strong>. Contestant-level data (acts) was extracted from season-specific tables. Following extraction, data cleaning steps were applied to address inconsistencies, including: converting age values recorded as text into numeric format, standardising judge mentor names, and aligning column names across seasons. These steps ensured the dataset was suitable for comparative analysis.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Show implementation details</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Acts Table</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Scrape acts table from acts section in each season</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>scrape_acts_table <span class="ot">&lt;-</span> <span class="cf">function</span>(url) {</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  series_num <span class="ot">&lt;-</span> <span class="fu">str_extract</span>(url, <span class="st">"series_</span><span class="sc">\\</span><span class="st">d+"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_remove</span>(<span class="st">"series_"</span>) <span class="sc">|&gt;</span> <span class="fu">as.integer</span>()</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  page <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(<span class="fu">read_html</span>(url), <span class="at">error =</span> <span class="cf">function</span>(e) <span class="fu">return</span>(<span class="cn">NULL</span>))</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.null</span>(page)) <span class="fu">return</span>(<span class="fu">tibble</span>())</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  tables <span class="ot">&lt;-</span> page <span class="sc">|&gt;</span> <span class="fu">html_elements</span>(<span class="st">"table.wikitable"</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  candidate_tables <span class="ot">&lt;-</span> tables <span class="sc">|&gt;</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map</span>(<span class="sc">~</span> <span class="fu">tryCatch</span>(<span class="fu">html_table</span>(.x, <span class="at">fill =</span> <span class="cn">TRUE</span>), <span class="at">error =</span> <span class="cf">function</span>(e) <span class="cn">NULL</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">compact</span>()</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Detect table with expected columns</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  acts_table <span class="ot">&lt;-</span> candidate_tables <span class="sc">|&gt;</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">keep</span>(<span class="sc">~</span> <span class="fu">all</span>(<span class="fu">c</span>(<span class="st">"Age(s)"</span>, <span class="st">"Hometown"</span>, <span class="st">"Category (mentor)"</span>, <span class="st">"Result"</span>) <span class="sc">%in%</span> <span class="fu">names</span>(.x)) <span class="sc">&amp;&amp;</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>           <span class="fu">any</span>(<span class="fu">c</span>(<span class="st">"Act"</span>, <span class="st">"Contestant"</span>) <span class="sc">%in%</span> <span class="fu">names</span>(.x))) <span class="sc">|&gt;</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">first</span>()</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.null</span>(acts_table)) <span class="fu">return</span>(<span class="fu">tibble</span>())</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Rename Contestant to Act if needed</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="st">"Contestant"</span> <span class="sc">%in%</span> <span class="fu">names</span>(acts_table)) {</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">names</span>(acts_table)[<span class="fu">names</span>(acts_table) <span class="sc">==</span> <span class="st">"Contestant"</span>] <span class="ot">&lt;-</span> <span class="st">"Act"</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Clean column names first so we can use age_s</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  acts_table <span class="ot">&lt;-</span> acts_table <span class="sc">|&gt;</span> <span class="fu">clean_names</span>()</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Compute derived fields and normalisation</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  acts_table <span class="ot">&lt;-</span> acts_table <span class="sc">|&gt;</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>      <span class="co">#redefine age</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>      <span class="at">age =</span> <span class="fu">case_when</span>(</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>        <span class="fu">str_detect</span>(age_s, <span class="st">"–|&amp;|-"</span>) <span class="sc">~</span> <span class="fu">map_dbl</span>(<span class="fu">str_extract_all</span>(age_s, <span class="st">"</span><span class="sc">\\</span><span class="st">d+"</span>), <span class="sc">~</span> <span class="fu">mean</span>(<span class="fu">as.numeric</span>(.x))),</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>        <span class="fu">str_detect</span>(age_s, <span class="st">"</span><span class="sc">\\</span><span class="st">d+"</span>) <span class="sc">~</span> <span class="fu">as.numeric</span>(<span class="fu">str_extract</span>(age_s, <span class="st">"</span><span class="sc">\\</span><span class="st">d+"</span>)),</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>        <span class="cn">TRUE</span> <span class="sc">~</span> <span class="cn">NA_real_</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>      <span class="at">age =</span> <span class="fu">round</span>(age),</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>      <span class="co">#redefine series</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>      <span class="at">series =</span> series_num,</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>      <span class="co">#redefine judges</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>      <span class="at">judges =</span> <span class="fu">str_extract</span>(category_mentor, <span class="st">"(?&lt;=</span><span class="sc">\\</span><span class="st">().+?(?=</span><span class="sc">\\</span><span class="st">))"</span>),</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>      <span class="at">categories =</span> <span class="fu">str_trim</span>(<span class="fu">str_remove</span>(category_mentor, <span class="st">"</span><span class="sc">\\</span><span class="st">s*</span><span class="sc">\\</span><span class="st">(.*</span><span class="sc">\\</span><span class="st">)"</span>)),</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>      <span class="at">judges =</span> <span class="fu">case_when</span>(</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>        judges <span class="sc">==</span> <span class="st">"Cowell"</span> <span class="sc">~</span> <span class="st">"Simon Cowell"</span>,</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>        judges <span class="sc">==</span> <span class="st">"Osbourne"</span> <span class="sc">~</span> <span class="st">"Sharon Osbourne"</span>,</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>        judges <span class="sc">==</span> <span class="st">"Walsh"</span> <span class="sc">~</span> <span class="st">"Louis Walsh"</span>,</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>        judges <span class="sc">==</span> <span class="st">"Minogue"</span> <span class="sc">~</span> <span class="st">"Dannii Minogue"</span>,</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>        judges <span class="sc">==</span> <span class="st">"Cole"</span> <span class="sc">~</span> <span class="st">"Cheryl"</span>,</span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>        judges <span class="sc">==</span> <span class="st">"Gary Barlow"</span> <span class="sc">~</span> <span class="st">"Gary Barlow"</span>,</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>        judges <span class="sc">==</span> <span class="st">"Tulisa"</span> <span class="sc">~</span> <span class="st">"Tulisa Young"</span>,</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>        judges <span class="sc">==</span> <span class="st">"Kelly Rowland"</span> <span class="sc">~</span> <span class="st">"Kelly Rowland"</span>,</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>        judges <span class="sc">==</span> <span class="st">"Fernandez-Versini"</span> <span class="sc">~</span> <span class="st">"Cheryl"</span>,</span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>        judges <span class="sc">==</span> <span class="st">"Mel B"</span> <span class="sc">~</span> <span class="st">"Mel B"</span>,</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>        judges <span class="sc">==</span> <span class="st">"Scherzinger"</span> <span class="sc">~</span> <span class="st">"Nicole Scherzinger"</span>,</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>        judges <span class="sc">==</span> <span class="st">"Field"</span> <span class="sc">~</span> <span class="st">"Ayda Field"</span>,</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>        judges <span class="sc">==</span> <span class="st">"Tomlinson"</span> <span class="sc">~</span> <span class="st">"Louis Tomlinson"</span>,</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>        judges <span class="sc">==</span> <span class="st">"Williams"</span> <span class="sc">~</span> <span class="st">"Robbie Williams"</span>,</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>        judges <span class="sc">==</span> <span class="st">"Barlow"</span> <span class="sc">~</span> <span class="st">"Gary Barlow"</span>,</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>        judges <span class="sc">==</span> <span class="st">"Ora"</span> <span class="sc">~</span> <span class="st">"Rita Ora"</span>,</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>        <span class="cn">TRUE</span> <span class="sc">~</span> judges</span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>      <span class="at">categories =</span> <span class="fu">case_when</span>(</span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>        categories <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Over 25s"</span>, <span class="st">"Over 26s"</span>, <span class="st">"Over 28s"</span>, <span class="st">"Over 29s"</span>) <span class="sc">~</span> <span class="st">"Overs"</span>,</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>        categories <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"16-24s"</span>, <span class="st">"16–24s"</span>) <span class="sc">~</span> <span class="st">"Young Adults"</span>,</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>        <span class="cn">TRUE</span> <span class="sc">~</span> categories</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(act, result, age, series, judges, categories)</span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(acts_table)</span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply scraping for Acts Table</span></span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>acts_all <span class="ot">&lt;-</span> <span class="fu">map_df</span>(season_urls, scrape_acts_table)</span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a><span class="co"># Write csv for checking</span></span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(acts_all, <span class="st">"data/xfactor_acts.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="6" type="1">
+<li><strong>Ratings Table Definition and Cleaning</strong>. Series-level ratings data was extracted using the same scraping approach. After extraction, the dataset was cleaned to retain only analytically relevant variables, including episode counts, air dates, and average UK viewership.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Show implementation details</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ratings Table</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Scrape series overview ratings</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>scrape_series_ratings <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Find all tables on the page</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  tables <span class="ot">&lt;-</span> season_url <span class="sc">|&gt;</span> <span class="fu">html_elements</span>(<span class="st">"table"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter to the table that contains "Average UK viewers"</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  ratings_table <span class="ot">&lt;-</span> tables <span class="sc">|&gt;</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map</span>(<span class="sc">~</span> <span class="fu">tryCatch</span>(<span class="fu">html_table</span>(.x, <span class="at">fill =</span> <span class="cn">TRUE</span>), <span class="at">error =</span> <span class="cf">function</span>(e) <span class="cn">NULL</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">compact</span>() <span class="sc">|&gt;</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">keep</span>(<span class="sc">~</span> <span class="fu">any</span>(<span class="fu">str_detect</span>(<span class="fu">names</span>(.x), <span class="st">"Average UK viewers"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">first</span>()</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.null</span>(ratings_table)) <span class="fu">return</span>(<span class="fu">tibble</span>())</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Rename all columns</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">ncol</span>(ratings_table) <span class="sc">&gt;=</span> <span class="dv">8</span>) {</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">colnames</span>(ratings_table)[<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>      <span class="st">"series"</span>, <span class="st">"episodes"</span>, <span class="st">"first_ep"</span>, <span class="st">"last_ep"</span>,</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>      <span class="st">"winner"</span>, <span class="st">"runner_up"</span>, <span class="st">"avg_uk_viewers"</span>, <span class="st">"winning_mentor"</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Select and clean the relevant columns</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  ratings_table <span class="ot">&lt;-</span> ratings_table <span class="sc">|&gt;</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(series, episodes, first_ep, last_ep, avg_uk_viewers) <span class="sc">|&gt;</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">series =</span> <span class="fu">as.integer</span>(series),</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">episodes =</span> <span class="fu">as.integer</span>(episodes),</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">avg_uk_viewers =</span> <span class="fu">as.numeric</span>(<span class="fu">str_replace</span>(avg_uk_viewers, <span class="st">","</span>, <span class="st">""</span>))</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(series))</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(ratings_table)</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply scraping</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>ratings_all <span class="ot">&lt;-</span> <span class="fu">scrape_series_ratings</span>()</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Write CSV</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(ratings_all, <span class="st">"data/xfactor_ratings.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<ol start="7" type="1">
+<li><strong>Data Storage and Analysis Readiness</strong>. After data collection and cleaning, both datasets were stored locally to enable validation, reproducibility, and efficient analysis. Given the manageable size of the data, the final analysis uses directly sourced Wikipedia data to maintain transparency and traceability.</li>
+</ol>
+</section>
+<section id="references-for-the-data-sources" class="level3">
+<h3 class="anchored" data-anchor-id="references-for-the-data-sources">References for the Data Sources</h3>
+<p>Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 1. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_1</p>
+<p>Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 2. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_2</p>
+<p>Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 3. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_3</p>
+<p>Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 4. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_4</p>
+<p>Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 5. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_5</p>
+<p>Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 6. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_6</p>
+<p>Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 7. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_7</p>
+<p>Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 8. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_8</p>
+<p>Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 9. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_9</p>
+<p>Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 10. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_10</p>
+<p>Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 11. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_11</p>
+<p>Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 12. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_12</p>
+<p>Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 13. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_13</p>
+<p>Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 14. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_14</p>
+<p>Wikipedia contributors. (n.d.). The X Factor (British TV series) – Series 15. Wikipedia. Retrieved June 15, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)_series_15</p>
+<!-- Task 2 Tab: Writing your blogpost -->
+</section>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<section id="motivation" class="level3">
+<h3 class="anchored" data-anchor-id="motivation">Motivation</h3>
+<p>Watching The X Factor UK was a regular family activity during my early teenage years, making the programme a familiar and culturally significant part of my viewing experience. As a long-running reality singing competition created by Simon Cowell, the show featured a structured format in which judges mentored specific contestant categories across each season.</p>
+<p>Although The X Factor UK was cancelled by ITV in 2021 (Wilson, 2021), public statements by Simon Cowell in 2024 indicated interest in reviving the franchise (Sweetnam, 2024). The programme originally aired for 15 seasons between 2004 and 2018, generating a substantial historical record of contestants, judges, categories, and audience ratings.</p>
+<p>This project is motivated by an interest in examining these historical patterns through data. Using publicly available data from Wikipedia, the analysis explores factors associated with winning outcomes across all seasons, with particular focus on contestant categories, age groups, and judge mentorship. The goal is to move beyond anecdotal perceptions of success and provide a data-driven perspective on what has historically influenced winning outcomes in The X Factor UK.</p>
+</section>
+<section id="analysis" class="level3">
+<h3 class="anchored" data-anchor-id="analysis">Analysis</h3>
+<section id="sub-question-1-winners-by-season-age-category-and-judge" class="level4">
+<h4 class="anchored" data-anchor-id="sub-question-1-winners-by-season-age-category-and-judge">Sub-question 1: Winners by Season, Age, Category, and Judge</h4>
+<p>Which contestants won each season, including their age at the time of winning, competition category, and mentoring judge?</p>
+<p>This section examines the winning contestant from each season of The X Factor UK, including their age at the time of winning, competition category, and mentoring judge. The summary provides a complete season-by-season overview of winning outcomes across all 15 series.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Table 1: Winner Acts by Series, Age, Judge, and Category</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">series</th>
+<th style="text-align: left;">act</th>
+<th style="text-align: right;">age</th>
+<th style="text-align: left;">judges</th>
+<th style="text-align: left;">categories</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Steve Brookstein</td>
+<td style="text-align: right;">35</td>
+<td style="text-align: left;">Simon Cowell</td>
+<td style="text-align: left;">Overs</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Shayne Ward</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: left;">Louis Walsh</td>
+<td style="text-align: left;">Young Adults</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Leona Lewis</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: left;">Simon Cowell</td>
+<td style="text-align: left;">Young Adults</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Leon Jackson</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: left;">Dannii Minogue</td>
+<td style="text-align: left;">Boys</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Alexandra Burke</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: left;">Cheryl</td>
+<td style="text-align: left;">Girls</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">Joe McElderry</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: left;">Cheryl</td>
+<td style="text-align: left;">Boys</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Matt Cardle</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: left;">Dannii Minogue</td>
+<td style="text-align: left;">Boys</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">Little Mix</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: left;">Tulisa Young</td>
+<td style="text-align: left;">Groups</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">James Arthur</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: left;">Nicole Scherzinger</td>
+<td style="text-align: left;">Boys</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">Sam Bailey</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: left;">Sharon Osbourne</td>
+<td style="text-align: left;">Overs</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">11</td>
+<td style="text-align: left;">Ben Haenow</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: left;">Simon Cowell</td>
+<td style="text-align: left;">Overs</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">Louisa Johnson</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: left;">Rita Ora</td>
+<td style="text-align: left;">Girls</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">Matt Terry</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: left;">Nicole Scherzinger</td>
+<td style="text-align: left;">Boys</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">14</td>
+<td style="text-align: left;">Rak-Su</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: left;">Simon Cowell</td>
+<td style="text-align: left;">Groups</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">15</td>
+<td style="text-align: left;">Dalton Harris</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: left;">Louis Tomlinson</td>
+<td style="text-align: left;">Boys</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Table 1 highlights a structural difference in category naming during the early seasons of the programme. In Series 2 and 3, the category labelled Young Adults was used instead of separate Boys and Girls categories. Further review of the programme format indicates that these early seasons featured only three judges, resulting in male and female contestants under the age of 24 being grouped into a single category. From later seasons onward, the category structure was standardised, allowing for clearer separation between age and gender-based categories.</p>
+</section>
+<section id="sub-question-2-winning-outcomes-by-judge-and-category" class="level4">
+<h4 class="anchored" data-anchor-id="sub-question-2-winning-outcomes-by-judge-and-category">Sub-question 2: Winning Outcomes by Judge and Category</h4>
+<p>How frequently did each judge mentor a winning contestant within a specific category?</p>
+<p>To address this question, the acts_all dataset was filtered to include only winning contestants identified in Sub-question 1. A stacked bar chart was then constructed by grouping wins by mentoring judge and competition category. Judges were ordered from highest to lowest total number of wins to facilitate comparison across mentoring outcomes.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="x-factor-uk-winning-patterns_files/figure-html/sub-question-2-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Figure 1: Number of Winners by Judge</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Figure 1 indicates that Simon Cowell was the most successful judge in terms of total winning outcomes, with four winners across three categories: Overs, Young Adults, and Groups. Cheryl, Dannii Minogue, and Nicole Scherzinger each mentored two winning acts during their respective tenures. In contrast, Louis Tomlinson, Louis Walsh, Rita Ora, Sharon Osbourne, and Tulisa Young each mentored one winning act. These results suggest that sustained success across multiple categories was concentrated among a small number of judges, rather than being evenly distributed across the judging panel.</p>
+</section>
+<section id="sub-question-3-winning-distribution-by-category" class="level4">
+<h4 class="anchored" data-anchor-id="sub-question-3-winning-distribution-by-category">Sub-question 3: Winning Distribution by Category</h4>
+<p>How often did each contestant category win across all seasons?</p>
+<p>To summarise the distribution of winning outcomes across categories, the relative proportion of total wins by category was calculated and visualised to highlight differences in overall success rates.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="x-factor-uk-winning-patterns_files/figure-html/main-question-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Figure 2: Winning Percentage by Category</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Figure 2 shows that the Boys category recorded the highest proportion of wins, accounting for 40% of all series victories. The Overs category ranked second with 20% of total wins. In contrast, the Girls, Groups, and Young Adults categories each accounted for 13.3% of winning outcomes across all seasons. This concentration of wins suggests a structural advantage for male solo contestants within the competition format over time.</p>
+</section>
+<section id="sub-question-4-age-profile-of-winning-contestants" class="level4">
+<h4 class="anchored" data-anchor-id="sub-question-4-age-profile-of-winning-contestants">Sub-question 4: Age Profile of Winning Contestants</h4>
+<p>What is the age distribution of winners over time?</p>
+<p>To examine the age profile of winning contestants, winner ages were grouped into three bands: under 18, under 25, and 25 or older. Aggregate counts were then calculated and visualised using a stacked bar chart to highlight differences across age groups and categories.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="x-factor-uk-winning-patterns_files/figure-html/sub-question-4-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Figure 3: Winner Count by Age Group</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Figure 3 indicates that contestants under 25 accounted for the majority of winning outcomes, with nine wins across all seasons. This indicates that younger contestants, particularly those in their late teens to early 20s, were the most successful on The X Factor UK. In contrast, contestants under 18 achieved only a single win, indicating limited success for the youngest age group. Furthermore, the 25-and-over group produced five winners, demonstrating that older contestants remained competitive, albeit with lower overall success compared to the under-25 group. Overall, the results suggest a competitive advantage for contestants in the under-25 age range, aligning with the show’s historical emphasis on emerging young talent.</p>
+</section>
+<section id="sub-question-5-viewership-trends-across-series" class="level4">
+<h4 class="anchored" data-anchor-id="sub-question-5-viewership-trends-across-series">Sub-question 5: Viewership Trends Across Series</h4>
+<p>How did television ratings vary across seasons?</p>
+<p>This sub-question is examined using the ratings_all dataset, which contains season-level average UK viewership figures. Figure 4 presents a line chart of average UK viewership across all 15 series.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="x-factor-uk-winning-patterns_files/figure-html/sub-question-5-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Figure 4: Average UK Viewers per Series</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Figure 4 shows that The X Factor UK reached its highest viewership during season 7, peaking at an average of 14.1 million viewers. This suggests that Series 7 represented the peak of the programme’s popularity during its broadcast run. Following this peak, average viewership declined steadily across subsequent seasons, reaching 5.8 million viewers by the final series. This sustained downward trend indicates a gradual loss of audience engagement in later years, despite continued format consistency.</p>
+</section>
+<section id="main-insight-what-drives-winning-outcomes-in-the-x-factor-uk" class="level4">
+<h4 class="anchored" data-anchor-id="main-insight-what-drives-winning-outcomes-in-the-x-factor-uk">Main Insight: What Drives Winning Outcomes in The X Factor UK?</h4>
+<p>Across all 15 seasons of The X Factor UK, the Boys category recorded the highest success rate, accounting for 40% of all winning acts. As shown in Figure 2, this makes the Boys category the most consistently successful category in the show’s history.</p>
+<p>Contestant age also played a significant role in winning outcomes. As illustrated in Figure 3, contestants aged under 25 accounted for 9 of the 15 total winners, indicating a strong preference or sustained trend toward younger talent across seasons.</p>
+<p>Judge mentorship further influenced success, though its impact varied by category. While Figure 1 shows that Simon Cowell mentored the highest number of winners overall (four wins), none of these victories came from the Boys category. Instead, judges such as Dannii Minogue and Nicole Scherzinger were instrumental in mentoring winners within the Boys category.</p>
+<p>Overall, these findings suggest that category and contestant age were the primary drivers of winning success, while judge influence was more category-specific rather than universally dominant.</p>
+</section>
+</section>
+<section id="conclusion" class="level3">
+<h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+<p>Consistent with the main insight, the Boys category emerged as the most successful group across all seasons of The X Factor UK, accounting for six wins out of fifteen seasons (40%).</p>
+<p>Contestant age also played a decisive role in winning outcomes. Performers aged under 25 accounted for 60% of all winners (9 out of 15), indicating a clear and consistent preference for younger talent among audiences throughout the series.</p>
+<p>Judge influence further shaped winning patterns, though its impact varied by category. While Simon Cowell was the most successful judge overall, mentoring four winning acts, none of these victories came from the Boys category. Instead, judges such as Dannii Minogue and Nicole Scherzinger were particularly effective in mentoring winners within this category. This suggests that while some judges achieved broad success, others demonstrated strong category-specific specialisation.</p>
+<p>Finally, audience engagement followed a clear lifecycle trend. The X Factor UK reached its peak average viewership in Season 7, with 14.1 million viewers, before experiencing a steady decline in subsequent seasons, ending at 5.8 million viewers in the final season. This pattern highlights both the cultural peak of the program and the gradual erosion of audience interest over time.</p>
+<p>In summary, winning outcomes on The X Factor UK were driven primarily by contestant category and age, with judge influence acting as a secondary, category-dependent factor amid declining audience engagement over time.</p>
+</section>
+<section id="references" class="level3">
+<h3 class="anchored" data-anchor-id="references">References</h3>
+<p>Firke, S. (2023). janitor: Simple tools for examining and cleaning dirty data (R package version 2.2.0). https://CRAN.R-project.org/package=janitor</p>
+<p>Henry, L. (2023). purrr: Functional programming tools (R package version 1.0.2). https://CRAN.R-project.org/package=purrr</p>
+<p>Muenchen, R. A., &amp; Rudis, B. (2021). polite: Be nice on the web (R package version 0.1.1). https://CRAN.R-project.org/package=polite</p>
+<p>Sweetnam, J. (2024). Simon Cowell addresses X Factor return rumours as fans beg for show comeback. Daily Star. https://www.dailystar.co.uk/tv/simon-cowell-addresses-x-factor-32327778</p>
+<p>Wickham, H. (2023). rvest: Easily harvest (scrape) web pages (R package version 1.0.4). https://CRAN.R-project.org/package=rvest</p>
+<p>Wickham, H., et al.&nbsp;(2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686. https://doi.org/10.21105/joss.01686</p>
+<p>Wickham, H., François, R., Henry, L., &amp; Müller, K. (2023). dplyr: A Grammar of Data Manipulation. R package version 1.1.1.</p>
+<p>Wikipedia contributors. (n.d.). The X Factor (British TV series). Wikipedia. Retrieved June 20, 2025, from https://en.wikipedia.org/wiki/The_X_Factor_(British_TV_series)</p>
+<p>Wilson, J. (2021). The X Factor cancelled after 17 years. Forbes. https://www.forbes.com/sites/joshwilson/2021/07/29/the-x-factor-cancelled-after-17-years/</p>
+<p>Xie, Y. (2023). knitr: A General-Purpose Package for Dynamic Report Generation in R. R package version 1.42.</p>
+</section>
+<section id="ai-acknowledgment" class="level3">
+<h3 class="anchored" data-anchor-id="ai-acknowledgment">AI acknowledgment</h3>
+<p>Generative AI tools were used selectively to assist with language refinement, clarity, and structural editing of written explanations. All data collection, data cleaning, analysis, visualisation, and interpretation were independently designed, implemented, and validated by the author.</p>
+<!-- Task 3 Tab: Behind the Scenes -  -->
+</section>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<section id="data-preparation-and-technical-challenges" class="level3">
+<h3 class="anchored" data-anchor-id="data-preparation-and-technical-challenges">Data Preparation and Technical Challenges</h3>
+<p>This project involved a substantial amount of data cleaning and standardisation that would not typically be visible in a public-facing blog post. The primary challenge stemmed from inconsistencies in the way data was presented across Wikipedia pages for different seasons of The X Factor UK.</p>
+<p>Judge and category names were not consistently recorded across seasons. For example, some judge names appeared in abbreviated or alternative forms (e.g., “Cowell”, “Cole”), requiring manual mapping to standardised full names (e.g., “Simon Cowell”, “Cheryl”) to ensure analytical consistency. Similarly, category labels varied between early and later seasons, necessitating additional harmonisation before aggregation.</p>
+<p>The age variable also required careful handling. In several cases, ages were recorded as ranges (e.g., “17–24”) or as multiple values for group acts. These entries could not be directly analysed and required string parsing, conditional logic, and numeric conversion, including the use of averaging where appropriate, to produce a consistent numeric representation.</p>
+<p>Web scraping itself was time-intensive due to structural inconsistencies in Wikipedia tables across seasons. Some tables contained missing columns, alternative header names, or differing layouts, which introduced errors during automated extraction. These issues were addressed through defensive programming techniques, including conditional checks and tryCatch() logic, to ensure the scraping process could adapt to structural variation without failing.</p>
+<p>Overall, the most time-consuming and least “visible” aspect of this project was the standardisation of inconsistent table formats and naming conventions. While these tasks were not analytically exciting, they were essential for ensuring data quality, comparability across seasons, and the validity of downstream analysis.</p>
+</section>
+<section id="technical-challenges-and-problem-solving" class="level3">
+<h3 class="anchored" data-anchor-id="technical-challenges-and-problem-solving">Technical Challenges and Problem Solving</h3>
+<p>A key challenge in this analysis was the variation in table structures across Wikipedia pages for different seasons of The X Factor UK. While most seasons followed a broadly consistent format, some exceptions required additional handling. For example, Season 12 used a different column header (“Contestant” instead of “Act”), necessitating conditional renaming logic to ensure consistency across datasets.</p>
+<p>In several cases, tables did not contain the expected columns, which caused errors during automated scraping and resulted in incomplete or incorrect outputs. To address this, defensive programming techniques were implemented, including validation checks and fallback logic to identify, skip, or adapt to malformed tables. This required careful code review and iterative testing to stabilise the scraping process.</p>
+<p>As part of this project, I also strengthened my web scraping skills, particularly through the use of rvest and purrr to systematically collect data across multiple URLs. While web scraping was not a technique I had previously used extensively, this project required designing a robust workflow capable of automatically extracting, cleaning, and integrating data from heterogeneous web sources.</p>
+<p>Despite structural inconsistencies across pages, the original analytical scope was retained. The final outcome was a reliable and reproducible data pipeline that could consistently extract, standardise, and join data across all seasons.</p>
+</section>
+<section id="limitations-and-future-extensions" class="level3">
+<h3 class="anchored" data-anchor-id="limitations-and-future-extensions">Limitations and Future Extensions</h3>
+<p>One limitation of this analysis is its exclusive focus on winning contestants. While winners provide a clear outcome measure, excluding runners-up and finalists may overlook additional performance patterns and competitive dynamics that influence success. Incorporating broader placement data could provide a more comprehensive view of category and judge effects.</p>
+<p>Contestant age was grouped into three broad categories to support high-level comparison. While effective for identifying overall trends, future analysis could examine continuous age measures or median ages within categories to provide more granular insights.</p>
+<p>The ratings analysis was constrained by data availability, as episode-level ratings were not consistently available across seasons. As a result, the analysis relies on season-level average viewership, which limits the ability to assess short-term audience responses to specific contestants, judges, or live-show events.</p>
+<p>The analysis also implicitly assumes that judge–category combinations had comparable opportunities to produce winners across seasons. In practice, changes to the show’s format, judging panel composition, and voting mechanisms over time may have influenced competitive balance.</p>
+<p>Future extensions could incorporate public engagement indicators such as social media activity, voting data, or contestant progression through live shows to better capture audience influence. From a technical perspective, the scraping workflow could be further improved by persisting cleaned datasets locally to reduce reliance on live website structures and improve long-term reproducibility.</p>
+<p>Overall, while these limitations constrain the scope of inference, the data and methods used are appropriate for the questions addressed in this project and provide a solid foundation for further analytical expansion.</p>
+
+
+</section>
+</div>
+</div>
+</div>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
