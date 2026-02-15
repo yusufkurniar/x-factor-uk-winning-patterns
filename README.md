@@ -1,17 +1,62 @@
-Author: Yusuf Kurnia Romadhon
+# 🎤 The X Factor UK – Winning Patterns Analysis (Series 1–15)
 
-Release Date: 18 June 2025
+A data analytics project examining **winning patterns, judge influence, and category success** in *The X Factor UK* (Series 1–15), using publicly available Wikipedia data.
 
-This project uses census-level data from the regular broadcast series of The X Factor UK (Series 1–15). Two datasets are used: Acts and Ratings. 
+This project focuses on **exploratory data analysis, categorical comparison, and trend analysis**, with clear visual storytelling.
 
-The Acts dataset contains contestant-level information, including the winning act, competition result, age, season, judge mentor, and category. The Ratings dataset provides season-level metrics, including episode counts, air dates, and average UK viewership. The combined use of these datasets enables analysis of the following business question: “which category had the highest success rate for winning across all seasons of The X Factor UK, and whether the age of the contestants or the specific judge significantly impacted the victories in that category?” and to address the sub-questions:
+---
 
-1. Which contestants won each season, including their age at the time of winning, competition category, and mentoring judge?
-2. How frequently did each judge mentor a winning contestant within a specific category?
-3. How often did each contestant category win across all seasons?
-4. What is the age distribution of winners over time?
-5. How did television ratings vary across seasons?
+## 🔍 Project Objective
 
-Data Limitation: This analysis relies exclusively on publicly available Wikipedia data. Episode-level rating information is not available for all seasons. Therefore, viewer analysis is limited to season-level average ratings.
+The primary research question:
 
-Licenses: Creative Commons Attribution-ShareAlike License 4.0
+> **Which contestant categories were most successful in winning The X Factor UK, and how did judge mentorship and contestant age influence those outcomes?**
+
+---
+
+## 📊 Key Questions Explored
+
+1. Which contestants won each season, including their **age, category, and mentoring judge**?
+2. How frequently did each judge mentor a winning contestant within specific categories?
+3. Which contestant categories had the **highest win rates** across all seasons?
+4. How did the **age distribution of winners** change over time?
+5. How did **UK television ratings** vary across seasons?
+
+---
+
+## 📁 Data Sources
+
+- **Acts dataset** – Contestant-level information  
+  (winner, age, category, judge mentor, season)
+- **Ratings dataset** – Season-level metrics  
+  (episode counts, air dates, average UK viewership)
+
+All data was sourced from **publicly available Wikipedia pages**.
+
+---
+
+## 📈 Analysis Highlights
+
+- Clear dominance patterns across specific contestant categories
+- Strong judge–category associations in winning outcomes
+- Age trends revealing shifts in audience and competition dynamics
+- Stable vs declining viewer interest across later seasons
+
+---
+
+## 🛠️ Tech Stack
+
+- **R**
+- **tidyverse (dplyr, ggplot2)**
+- **stringr**
+- **forcats**
+- **Wikipedia web scraping**
+- **Exploratory data analysis & visualisation**
+
+---
+
+## ▶️ How to Run Locally
+
+```r
+# Open the project in RStudio
+# Run the analysis scripts sequentially
