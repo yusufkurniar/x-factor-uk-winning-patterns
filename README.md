@@ -4,7 +4,7 @@ A data analytics project examining **winning patterns, judge influence, and cate
 
 This project focuses on **exploratory data analysis, categorical comparison, and trend analysis**, with clear visual storytelling.
 
-🔗 Live Website: [X Factor UK: Winning Patterns Analysis](https://yusufkurniar.github.io/x-factor-uk-winning-patterns/)
+🔗 **Live Website**: [X Factor UK: Winning Patterns Analysis](https://yusufkurniar.github.io/x-factor-uk-winning-patterns/)
 
 ---
 
@@ -28,9 +28,9 @@ The primary research question:
 
 ## 📁 Data Sources
 
-- **Acts dataset** – Contestant-level information  
+- **Acts dataset**: Contestant-level information  
   (winner, age, category, judge mentor, season)
-- **Ratings dataset** – Season-level metrics  
+- **Ratings dataset**: Season-level metrics  
   (episode counts, air dates, average UK viewership)
 
 All data was sourced from **publicly available Wikipedia pages**.
