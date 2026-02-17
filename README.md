@@ -1,10 +1,10 @@
-# 🎤 The X Factor UK – Winning Patterns Analysis (Series 1–15)
+# 🎤 The X Factor UK: Winning Patterns Analysis (Series 1–15)
 
 A data analytics project examining **winning patterns, judge influence, and category success** in *The X Factor UK* (Series 1–15), using publicly available Wikipedia data.
 
 This project focuses on **exploratory data analysis, categorical comparison, and trend analysis**, with clear visual storytelling.
 
-Link: [X Factor UK Winning Patterns](https://yusufkurniar.github.io/x-factor-uk-winning-patterns/)
+🔗 Live Website: [X Factor UK: Winning Patterns Analysis](https://yusufkurniar.github.io/x-factor-uk-winning-patterns/)
 
 ---
 
