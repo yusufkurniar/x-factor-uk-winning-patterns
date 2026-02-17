@@ -4,6 +4,8 @@ A data analytics project examining **winning patterns, judge influence, and cate
 
 This project focuses on **exploratory data analysis, categorical comparison, and trend analysis**, with clear visual storytelling.
 
+Link: [X Factor UK Winning Patterns](https://yusufkurniar.github.io/x-factor-uk-winning-patterns/)
+
 ---
 
 ## 🔍 Project Objective
